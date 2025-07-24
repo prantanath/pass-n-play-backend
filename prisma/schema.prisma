@@ -1,0 +1,139 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["public"]
+}
+
+enum StageType {
+  GROUP
+  KNOCKOUT
+
+  @@schema("public")
+}
+
+enum MatchStatus {
+  SCHEDULED
+  COMPLETED
+  LIVE
+
+  @@schema("public")
+}
+
+model Tournament {
+  id         String   @id @default(uuid())
+  name       String
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+  stages     Stage[]
+  teams      Team[]
+
+  @@schema("public")
+}
+
+model Stage {
+  id           String     @id @default(uuid())
+  name         String
+  type         StageType
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId String
+  groups       Group[]
+  matches      Match[]
+  advanceCount Int?
+  createdAt    DateTime   @default(now())
+
+  advancedTeams AdvancedTeam[]
+
+  @@schema("public")
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  name      String
+  stage     Stage    @relation(fields: [stageId], references: [id])
+  stageId   String
+
+  teams     Team[]   @relation("GroupTeams")
+  matches   Match[]
+
+  @@schema("public")
+}
+
+model Team {
+  id           String     @id @default(uuid())
+  name         String
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId String
+
+  players      Player[]
+
+  groups       Group[]    @relation("GroupTeams")
+
+  matchesA     Match[]    @relation("TeamA")
+  matchesB     Match[]    @relation("TeamB")
+
+  advancedTeams AdvancedTeam[]
+
+  @@schema("public")
+}
+
+model Player {
+  id       String  @id @default(uuid())
+  name     String
+  number   Int
+  team     Team    @relation(fields: [teamId], references: [id])
+  teamId   String
+
+  @@schema("public")
+}
+
+model Match {
+  id           String     @id @default(uuid())
+  stage        Stage      @relation(fields: [stageId], references: [id])
+  stageId      String
+  group        Group?     @relation(fields: [groupId], references: [id])
+  groupId      String?
+
+  teamA        Team       @relation("TeamA", fields: [teamAId], references: [id])
+  teamAId      String
+
+  teamB        Team       @relation("TeamB", fields: [teamBId], references: [id])
+  teamBId      String
+
+  matchDate    DateTime
+  venue        String
+  scoreA       Int?
+  scoreB       Int?
+  status       MatchStatus @default(SCHEDULED)
+
+  @@schema("public")
+}
+
+model AdvancedTeam {
+  id        String   @id @default(uuid())
+  stage     Stage    @relation(fields: [stageId], references: [id])
+  stageId   String
+
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+
+  createdAt DateTime @default(now())
+
+  @@schema("public")
+}
+model profiles {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @unique @db.Uuid
+  fullName   String?  // store Google full name here
+  role   String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@schema("public")
+}
