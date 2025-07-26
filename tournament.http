@@ -1,0 +1,9 @@
+### Create a tournament
+POST http://localhost:3000/tournaments
+Content-Type: application/json
+
+{
+  "name": "Summer Cup 2025",
+  "startDate": "2025-08-01T00:00:00.000Z",
+  "endDate": "2025-08-31T00:00:00.000Z"
+}
