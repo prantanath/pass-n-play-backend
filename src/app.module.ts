@@ -10,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { StageModule } from './stage/stage.module';
 import { GroupsModule } from './groups/groups.module';
 import { AdvancedTeamModule } from './advanced-team/advanced-team.module';
+import { PlayerStatModule } from './player-stat/player-stat.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AdvancedTeamModule } from './advanced-team/advanced-team.module';
     StageModule,
     GroupsModule,
     AdvancedTeamModule,
+    PlayerStatModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

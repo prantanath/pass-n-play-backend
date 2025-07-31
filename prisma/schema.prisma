@@ -63,30 +63,32 @@ model Team {
 }
 
 model Player {
-  id     String @id @default(uuid())
-  name   String
-  number Int
-  teamId String
-  team   Team   @relation(fields: [teamId], references: [id])
+  id         String       @id @default(uuid())
+  name       String
+  number     Int
+  teamId     String
+  team       Team         @relation(fields: [teamId], references: [id])
+  PlayerStat PlayerStat[]
 
   @@schema("public")
 }
 
 model Match {
-  id        String      @id @default(uuid())
-  stageId   String
-  groupId   String?
-  teamAId   String
-  teamBId   String
-  matchDate DateTime
-  venue     String
-  scoreA    Int?
-  scoreB    Int?
-  status    MatchStatus @default(SCHEDULED)
-  group     Group?      @relation(fields: [groupId], references: [id])
-  stage     Stage       @relation(fields: [stageId], references: [id])
-  teamA     Team        @relation("TeamA", fields: [teamAId], references: [id])
-  teamB     Team        @relation("TeamB", fields: [teamBId], references: [id])
+  id         String       @id @default(uuid())
+  stageId    String
+  groupId    String?
+  teamAId    String
+  teamBId    String
+  matchDate  DateTime
+  venue      String
+  scoreA     Int?
+  scoreB     Int?
+  status     MatchStatus  @default(SCHEDULED)
+  group      Group?       @relation(fields: [groupId], references: [id])
+  stage      Stage        @relation(fields: [stageId], references: [id])
+  teamA      Team         @relation("TeamA", fields: [teamAId], references: [id])
+  teamB      Team         @relation("TeamB", fields: [teamBId], references: [id])
+  PlayerStat PlayerStat[]
 
   @@schema("public")
 }
@@ -110,6 +112,20 @@ model profiles {
   updated_at DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   role       String?
 
+  @@schema("public")
+}
+
+model PlayerStat {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  playerid  String
+  matchid   String
+  goals     Int       @default(0)
+  assists   Int       @default(0)
+  createdat DateTime? @default(now()) @db.Timestamptz(6)
+  Match     Match     @relation(fields: [matchid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_match")
+  Player    Player    @relation(fields: [playerid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_player")
+
+  @@unique([playerid, matchid], map: "unique_player_match")
   @@schema("public")
 }
 

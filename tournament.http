@@ -1,9 +1,26 @@
 ### Create a tournament
-POST http://localhost:3000/tournaments
-Content-Type: application/json
+#POST http://localhost:3000/tournaments
+#Content-Type: application/json
+#x-user-id:jlsj;s
+#
+#{
+#  "name": "Summer Cup 2025",
+#  "startDate": "2025-08-01T00:00:00.000Z",
+#  "endDate": "2025-08-31T00:00:00.000Z"
+#}
 
-{
-  "name": "Summer Cup 2025",
-  "startDate": "2025-08-01T00:00:00.000Z",
-  "endDate": "2025-08-31T00:00:00.000Z"
-}
+DELETE http://localhost:3000/tournaments/09750879-f785-4a34-87ff-a83b26eac1aa
+Content-Type: application/json
+x-user-id: 93094f07-6715-4d8c-9bb6-7f468c1b7c65
+
+
+
+
+#{
+#  "playerid": "d304cfe8-e8ef-4571-9b04-067b78c83f19",
+#  "matchid": "612cf242-ab2f-4c41-90cf-c29cea21a0c6",
+#  "goals": 1
+#}
+
+
+#    GET http://localhost:3000/player-stat/summary/top-scorers

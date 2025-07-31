@@ -23,7 +23,7 @@ export class TournamentsController {
 
   @Delete(':id')
   @UseGuards(RoleGuard)
-  @Roles('Admin')
+  @Roles('admin')
   delete(@Param('id') id: string) {
     return this.tournamentsService.delete(id);
   }
